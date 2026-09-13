@@ -4,8 +4,10 @@ A Flutter mobile technical assessment using the DummyJSON API.
 
 ## Current progress
 
-Milestone 1: Android/iOS scaffold, dependencies, and a minimal Material 3 app.
-Product listing, API integration, and other assessment features are not implemented yet.
+Milestone 2: Dio configuration, product models, and remote data source for
+listing, paginated server-side search, and fresh product details are implemented.
+The UI still shows the milestone 1 welcome screen. Repository, controller,
+and product screens will be added in later milestones.
 
 ## Getting started
 
@@ -33,4 +35,19 @@ macOS and Xcode. Unit tests will be added in the testing milestone.
 AI assistance generated the initial scaffold setup, dependency configuration,
 base app code, and this documentation. This is implementation assistance, beyond
 guidance or research alone. The candidate will review and understand the code
-before submission. This section will be updated as development continues.
+before submission. AI also generated the milestone 2 API configuration, models,
+remote data source, and Android network permission change.
+
+## Data layer decisions
+
+- Dio is injected into the remote data source, allowing reuse and test replacement.
+- Requests use a 15-second connection and receive timeout.
+- Search uses the server endpoint so results include products beyond loaded pages.
+- Pagination metadata comes from the API; total is not hardcoded.
+- Brand is nullable; missing images use an empty list and thumbnail an empty string.
+- Required product fields are parsed strictly. Invalid data and HTTP failures
+  propagate to the caller instead of being disguised as an empty result.
+- Repository/controller error messages and request race handling are deferred
+  to their respective milestones.
+
+API reference: https://dummyjson.com/docs/products
