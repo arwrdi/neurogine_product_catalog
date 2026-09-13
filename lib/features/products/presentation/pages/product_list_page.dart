@@ -5,6 +5,7 @@ import '../controllers/product_controller.dart';
 import '../widgets/app_empty_state.dart';
 import '../widgets/app_error_state.dart';
 import '../widgets/product_card.dart';
+import 'product_detail_page.dart';
 
 class ProductListPage extends StatefulWidget {
   const ProductListPage({super.key});
@@ -75,7 +76,19 @@ class _ProductListPageState extends State<ProductListPage> {
               mainAxisExtent: 160 + 150 * scale,
             ),
             itemBuilder:
-                (context, index) => ProductCard(product: products[index]),
+                (context, index) => ProductCard(
+                  product: products[index],
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder:
+                            (_) => ProductDetailPage(
+                              productId: products[index].id,
+                            ),
+                      ),
+                    );
+                  },
+                ),
           ),
         ),
         SliverToBoxAdapter(
