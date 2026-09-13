@@ -4,23 +4,28 @@ A Flutter mobile technical assessment using the DummyJSON API.
 
 ## Current progress
 
-Milestone 3: ProductRepository now exposes listing, paginated server-side search,
-and fresh product details through the remote data source implemented in milestone 2.
-The UI still shows the milestone 1 welcome screen. Controller and product screens
-will be added in later milestones.
+Milestone 4: ProductController manages loading, pagination, refresh, query reset,
+and retry through ProductRepository. Controller tests cover failures and stale
+responses. The UI still shows the milestone 1 welcome screen; Provider wiring,
+product screens, and search debounce will be added in later milestones.
 
 ## Getting started
 
 Created with Flutter 3.29.3 and Dart 3.7.2.
+Milestone 4 was tested with Flutter 3.35.4, matching the current local package
+configuration. Use the same Flutter installation for dependency resolution,
+analysis, and tests; mixing SDK installations causes compilation errors.
 
 ```sh
 flutter pub get
 flutter run
 flutter analyze
+flutter test
 ```
 
 Use an Android emulator or connected Android device. Building for iOS requires
-macOS and Xcode. Unit tests will be added in the testing milestone.
+macOS and Xcode. Controller tests run without network access. Model mapping tests
+will be added in the model testing milestone.
 
 ## Initial decisions
 
@@ -37,7 +42,7 @@ base app code, and this documentation. This is implementation assistance, beyond
 guidance or research alone. The candidate will review and understand the code
 before submission. AI also generated the milestone 2 API configuration, models,
 remote data source, and Android network permission change, followed by the
-milestone 3 repository implementation and documentation.
+milestone 3 repository and milestone 4 controller, tests, and documentation.
 
 ## Data layer decisions
 
@@ -53,7 +58,12 @@ milestone 3 repository implementation and documentation.
   JSON parsing stay in the data source and models. No separate domain layer,
   interface/implementation pair, cache, or service locator is needed at this size.
 - The repository preserves pagination metadata and propagates failures unchanged.
-  Friendly error messages and request race handling belong to the controller
-  milestone. Failed requests must not be converted into empty successful pages.
+  The controller maps failures to readable messages and uses a request version
+  to ignore stale responses after refresh/search or disposal. Requests are not
+  cancelled at the HTTP level. Pagination failures keep existing products and
+  retry the same offset. Failed requests are not converted into empty pages.
+- Controller state is exposed through read-only getters. Provider will own its
+  lifecycle when the catalog screen is implemented. The search method resets
+  pagination immediately; the search UI will supply the debounce later.
 
 API reference: https://dummyjson.com/docs/products
