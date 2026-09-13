@@ -4,10 +4,10 @@ A Flutter mobile technical assessment using the DummyJSON API.
 
 ## Current progress
 
-Milestone 2: Dio configuration, product models, and remote data source for
-listing, paginated server-side search, and fresh product details are implemented.
-The UI still shows the milestone 1 welcome screen. Repository, controller,
-and product screens will be added in later milestones.
+Milestone 3: ProductRepository now exposes listing, paginated server-side search,
+and fresh product details through the remote data source implemented in milestone 2.
+The UI still shows the milestone 1 welcome screen. Controller and product screens
+will be added in later milestones.
 
 ## Getting started
 
@@ -36,7 +36,8 @@ AI assistance generated the initial scaffold setup, dependency configuration,
 base app code, and this documentation. This is implementation assistance, beyond
 guidance or research alone. The candidate will review and understand the code
 before submission. AI also generated the milestone 2 API configuration, models,
-remote data source, and Android network permission change.
+remote data source, and Android network permission change, followed by the
+milestone 3 repository implementation and documentation.
 
 ## Data layer decisions
 
@@ -47,7 +48,12 @@ remote data source, and Android network permission change.
 - Brand is nullable; missing images use an empty list and thumbnail an empty string.
 - Required product fields are parsed strictly. Invalid data and HTTP failures
   propagate to the caller instead of being disguised as an empty result.
-- Repository/controller error messages and request race handling are deferred
-  to their respective milestones.
+- ProductRepository provides a small entry point for presentation controllers.
+  Its remote data source is injected through the constructor; HTTP requests and
+  JSON parsing stay in the data source and models. No separate domain layer,
+  interface/implementation pair, cache, or service locator is needed at this size.
+- The repository preserves pagination metadata and propagates failures unchanged.
+  Friendly error messages and request race handling belong to the controller
+  milestone. Failed requests must not be converted into empty successful pages.
 
 API reference: https://dummyjson.com/docs/products
