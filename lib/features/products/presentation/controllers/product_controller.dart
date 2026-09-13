@@ -88,7 +88,7 @@ class ProductController extends ChangeNotifier {
 
   Future<void> refreshProducts() => loadProducts();
 
-  // The search field will debounce calls in the search milestone.
+  // The search field debounces typing before calling this method.
   Future<void> searchProducts(String query) async {
     if (_disposed || query.trim() == _query) return;
     _query = query.trim();

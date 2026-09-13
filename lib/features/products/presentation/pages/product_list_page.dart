@@ -5,6 +5,7 @@ import '../controllers/product_controller.dart';
 import '../widgets/app_empty_state.dart';
 import '../widgets/app_error_state.dart';
 import '../widgets/product_card.dart';
+import '../widgets/product_search_field.dart';
 import 'product_detail_page.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -15,7 +16,14 @@ class ProductListPage extends StatefulWidget {
 }
 
 class _ProductListPageState extends State<ProductListPage> {
-  final _scrollController = ScrollController();
+  final _scrollController = ScrollController(keepScrollOffset: false);
+
+  void _search(String query) {
+    final controller = context.read<ProductController>();
+    if (controller.query == query.trim()) return;
+    if (_scrollController.hasClients) _scrollController.jumpTo(0);
+    controller.searchProducts(query);
+  }
 
   @override
   void initState() {
@@ -43,7 +51,20 @@ class _ProductListPageState extends State<ProductListPage> {
     final controller = context.watch<ProductController>();
     return Scaffold(
       appBar: AppBar(title: const Text('Product Catalog')),
-      body: SafeArea(child: _buildBody(controller)),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: ProductSearchField(
+                initialQuery: controller.query,
+                onSearch: _search,
+              ),
+            ),
+            Expanded(child: _buildBody(controller)),
+          ],
+        ),
+      ),
     );
   }
 
@@ -63,7 +84,9 @@ class _ProductListPageState extends State<ProductListPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadNearBottom());
     final scale = MediaQuery.textScalerOf(context).scale(1);
     return CustomScrollView(
+      key: ValueKey(controller.query),
       controller: _scrollController,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       slivers: [
         SliverPadding(
           padding: const EdgeInsets.all(16),

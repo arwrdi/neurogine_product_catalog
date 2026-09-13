@@ -4,17 +4,20 @@ A Flutter mobile technical assessment using the DummyJSON API.
 
 ## Current progress
 
-Milestone 6: The catalog displays a two-column grid with loading, error, empty,
+Milestone 7: Server-side search now uses a 450 ms debounce with clear and keyboard
+submit actions. Each new query resets pagination and scroll position. The search
+field remains visible during loading, error, and empty states.
+The catalog displays a two-column grid with loading, error, empty,
 and pagination states. Tapping a product fetches fresh details and opens its
 image gallery, description, price, discount, rating, brand, category, and stock.
 Reusable cached images include loading/error placeholders (implemented early
-in milestone 5). Search debounce and the pull-to-refresh gesture are still pending.
+in milestone 5). The pull-to-refresh gesture is still pending.
 The controller already supports query resets and refresh.
 
 ## Getting started
 
 Created with Flutter 3.29.3 and Dart 3.7.2.
-Milestones 4–6 were tested with Flutter 3.35.4, matching the current local package
+Milestones 4–7 were tested with Flutter 3.35.4, matching the current local package
 configuration. Use the same Flutter installation for dependency resolution,
 analysis, and tests; mixing SDK installations causes compilation errors.
 
@@ -45,7 +48,8 @@ guidance or research alone. The candidate will review and understand the code
 before submission. AI also generated the milestone 2 API configuration, models,
 remote data source, and Android network permission change, followed by the
 milestone 3 repository, milestone 4 controller/tests, milestone 5 catalog UI,
-and milestone 6 detail controller/page, widget tests, and documentation.
+milestone 6 detail controller/page, and milestone 7 search/debounce, tests,
+and documentation.
 
 ## Data layer decisions
 
@@ -67,7 +71,9 @@ and milestone 6 detail controller/page, widget tests, and documentation.
   retry the same offset. Failed requests are not converted into empty pages.
 - Controller state is exposed through read-only getters. Provider will own its
   lifecycle in the catalog screen. The search method resets
-  pagination immediately; the search UI will supply the debounce later.
+  pagination immediately after the search field's 450 ms debounce. Clearing or
+  keyboard submission cancels the timer and runs immediately. Disposing the
+  search field cancels its pending timer.
 
 API reference: https://dummyjson.com/docs/products
 
@@ -77,9 +83,10 @@ API reference: https://dummyjson.com/docs/products
   owns a separate controller so opening details preserves the catalog state.
 - The detail controller handles requests and disposal; widgets contain no HTTP
   logic. The gallery uses a swipeable PageView and falls back to the thumbnail.
-- Seven automated tests cover controller behavior and widget flows including
+- Ten automated tests cover controller behavior and widget flows including
   list error/retry, fresh detail requests, detail error/retry, back navigation,
-  and empty results. Widget tests use fake data and no network.
+  empty results, debounce timing, clearing, keyboard submission, and disposal.
+  Widget tests use fake data and no network.
 - Manual device verification remains: scroll through multiple pages, open a
   product with multiple images, swipe its gallery, return to the same scroll
   position, and check layout with larger text. Android/iOS builds have not been
