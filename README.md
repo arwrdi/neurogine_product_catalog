@@ -4,10 +4,10 @@ A Flutter mobile technical assessment using the DummyJSON API.
 
 ## Current progress
 
-Milestone 4: ProductController manages loading, pagination, refresh, query reset,
+Milestone 5: The catalog now displays a two-column grid with Provider wiring, loading, error, empty, and pagination states. ProductController manages loading, pagination, refresh, query reset,
 and retry through ProductRepository. Controller tests cover failures and stale
-responses. The UI still shows the milestone 1 welcome screen; Provider wiring,
-product screens, and search debounce will be added in later milestones.
+responses. Reusable cached images include loading/error placeholders.
+Product detail and search debounce will be added in later milestones.
 
 ## Getting started
 
@@ -42,7 +42,7 @@ base app code, and this documentation. This is implementation assistance, beyond
 guidance or research alone. The candidate will review and understand the code
 before submission. AI also generated the milestone 2 API configuration, models,
 remote data source, and Android network permission change, followed by the
-milestone 3 repository and milestone 4 controller, tests, and documentation.
+milestone 3 repository, milestone 4 controller/tests, and milestone 5 catalog UI and documentation.
 
 ## Data layer decisions
 
@@ -67,3 +67,4 @@ milestone 3 repository and milestone 4 controller, tests, and documentation.
   pagination immediately; the search UI will supply the debounce later.
 
 API reference: https://dummyjson.com/docs/products
+
